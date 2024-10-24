@@ -36,6 +36,8 @@ leofs:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
+  persistence:
+    storageClass: hostpath
 
 dataextraction:
   image:
@@ -72,7 +74,7 @@ aimldashboard:
 
 aimlnotebook:
   image:
-    repository: nexus3.o-ran-sc.org:10002/o-ran-sc/portal-aiml-notebook-docker 
+    repository: nexus3.o-ran-sc.org:10002/o-ran-sc/portal-aiml-notebook-docker
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "2.1.0"
