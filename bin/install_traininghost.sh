@@ -16,11 +16,11 @@
 #
 # ==================================================================================
 
-tools/kubernetes/install_k8s.sh
-kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-tools/nfs/configure_nfs_server.sh localhost
+tools/kubernetes/install_k8s_wsl.sh
+# kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+# tools/nfs/configure_nfs_server.sh localhost
 tools/helm/install_helm.sh
-tools/nfs/install_nfs_subdir_external_provisioner.sh localhost
+# tools/nfs/install_nfs_subdir_external_provisioner.sh localhost
 
 bin/install_common_templates_to_helm.sh
 bin/build_default_pipeline_image.sh
