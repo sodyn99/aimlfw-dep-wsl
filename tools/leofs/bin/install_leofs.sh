@@ -25,7 +25,7 @@ sudo buildctl --addr=nerdctl-container://buildkitd build \
     --opt filename=Dockerfile.leofs \
     --local dockerfile=tools/leofs \
     --local context=. \
-    --output type=docker,name=leofs | docker load
+    --output type=oci,name=leofs | sudo nerdctl load --namespace k8s.io
 
 helm dep up helm/leofs
 helm install leofs helm/leofs -f RECIPE_EXAMPLE/example_recipe_latest_stable.yaml
