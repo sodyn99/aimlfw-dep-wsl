@@ -30,14 +30,14 @@ sudo buildctl --addr=nerdctl-container://buildkitd build \
 	--opt filename=Dockerfile \
 	--local dockerfile=tm \
 	--local context=tm \
-	--output type=docker,name=tm:latest | docker load
+	--output type=oci,name=tm:latest | sudo nerdctl load --namespace k8s.io
 
 sudo buildctl --addr=nerdctl-container://buildkitd build \
     --frontend dockerfile.v0 \
     --opt filename=Dockerfile \
     --local dockerfile=data-extraction \
     --local context=data-extraction \
-    --output type=docker,name=data-extraction:latest | docker load
+    --output type=oci,name=data-extraction:latest | sudo nerdctl load --namespace k8s.io
 
 
 sudo buildctl --addr=nerdctl-container://buildkitd build \
@@ -45,35 +45,35 @@ sudo buildctl --addr=nerdctl-container://buildkitd build \
     --opt filename=Dockerfile \
     --local dockerfile=kubeflow-adapter \
     --local context=kubeflow-adapter \
-    --output type=docker,name=kfadapter:latest | docker load
+    --output type=oci,name=kfadapter:latest | sudo nerdctl load --namespace k8s.io
 
 sudo buildctl --addr=nerdctl-container://buildkitd build \
     --frontend dockerfile.v0 \
     --opt filename=Dockerfile \
     --local dockerfile=aiml-dashboard \
     --local context=aiml-dashboard \
-    --output type=docker,name=aiml-dashboard:latest | docker load
+    --output type=oci,name=aiml-dashboard:latest | sudo nerdctl load --namespace k8s.io
 
 sudo buildctl --addr=nerdctl-container://buildkitd build \
     --frontend dockerfile.v0 \
     --opt filename=Dockerfile \
     --local dockerfile=aiml-dashboard/kf-pipelines \
     --local context=aiml-dashboard/kf-pipelines \
-    --output type=docker,name=aiml-notebook:latest | docker load
+    --output type=oci,name=aiml-notebook:latest | sudo nerdctl load --namespace k8s.io
 
 sudo buildctl --addr=nerdctl-container://buildkitd build \
     --frontend dockerfile.v0 \
     --opt filename=Dockerfile \
     --local dockerfile=kserve-adapter \
     --local context=kserve-adapter \
-    --output type=docker,name=kserve-adapter:1.0.1 | docker load
+    --output type=oci,name=kserve-adapter:1.0.1 | sudo nerdctl load --namespace k8s.io
 
 sudo buildctl --addr=nerdctl-container://buildkitd build \
     --frontend dockerfile.v0 \
     --opt filename=Dockerfile \
     --local dockerfile=modelmgmtservice \
     --local context=modelmgmtservice \
-    --output type=docker,name=modelmgmtservice:latest | docker load
+    --output type=oci,name=modelmgmtservice:latest | sudo nerdctl load --namespace k8s.io
 
 cd -
 rm -Rf /tmp/gerrit_code
