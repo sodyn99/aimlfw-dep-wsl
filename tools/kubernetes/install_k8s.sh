@@ -61,7 +61,6 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb /' | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
 sudo apt update && sudo apt install -y kubeadm=1.28.0-1.1 kubelet=1.28.0-1.1 kubectl=1.28.0-1.1
 sudo apt-mark hold kubelet kubeadm kubectl
-
 echo 'source <(kubectl completion bash)' >> ~/.bashrc
 
 check_status "Installing kubeadm, kubelet, and kubectl"
@@ -75,6 +74,7 @@ check_status "Installing crictl"
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 rm minikube-linux-amd64
+echo 'source <(minikube completion bash)' >> ~/.bashrc
 check_status "Installing minikube"
 
 echo "Step 5: Starting minikube with Containerd and enabling ingress addon..."
