@@ -77,12 +77,17 @@ rm minikube-linux-amd64
 echo 'source <(minikube completion bash)' >> ~/.bashrc
 check_status "Installing minikube"
 
-echo "Step 5: Starting minikube with Containerd and enabling ingress addon..."
-minikube start --driver=none --container-runtime=containerd --kubernetes-version=v1.28.0 \
+echo "Step 5: Starting minikube..."
+# minikube start --driver=none --container-runtime=containerd --kubernetes-version=v1.28.0 \
+#     --apiserver-ips 127.0.0.1 --apiserver-name localhost \
+#     --addons=nvidia-device-plugin \
+#     --cni=flannel
+# check_status "Starting minikube"
+minikube start --driver=docker --container-runtime=containerd --kubernetes-version=v1.28.0 \
     --apiserver-ips 127.0.0.1 --apiserver-name localhost \
     --addons=nvidia-device-plugin \
     --cni=flannel
-check_status "Starting minikube with containerd runtime and enabling ingress"
+check_status "Starting minikube"
 
 echo "Kubernetes cluster started with minikube using containerd!"
 
