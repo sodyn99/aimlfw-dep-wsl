@@ -21,4 +21,4 @@ sudo buildctl --addr=nerdctl-container://buildkitd build \
     --opt filename=Dockerfile.pipeline \
     --local dockerfile=tools/kubeflow \
     --local context=tools/kubeflow \
-    --output type=oci,name=traininghost/pipelineimage:latest | sudo nerdctl load --namespace k8s.io
+    --output type=docker,name=traininghost/pipelineimage:latest | docker load
