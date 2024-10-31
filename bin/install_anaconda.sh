@@ -14,7 +14,7 @@ INSTALLER="Anaconda3-2024.06-1-Linux-x86_64.sh"
 INSTALL_DIR="$HOME/anaconda3"
 
 echo "Starting Anaconda installation..."
-wget -q $ANACONDA_URL -O $INSTALLER
+wget $ANACONDA_URL -O $INSTALLER
 check_status "Downloading Anaconda"
 
 chmod +x $INSTALLER
