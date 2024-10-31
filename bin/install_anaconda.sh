@@ -7,6 +7,8 @@ check_status() {
     fi
 }
 
+sudo apt update && sudo apt install -y pv
+
 ANACONDA_URL="https://repo.anaconda.com/archive/Anaconda3-2024.06-1-Linux-x86_64.sh"
 INSTALLER="Anaconda3-2024.06-1-Linux-x86_64.sh"
 INSTALL_DIR="$HOME/anaconda3"
@@ -17,8 +19,8 @@ check_status "Downloading Anaconda"
 
 chmod +x $INSTALLER
 
-echo "Installing Anaconda to $INSTALL_DIR..."
-./$INSTALLER -b -p $INSTALL_DIR
+echo "Installing Anaconda to $INSTALL_DIR (this may take a few minutes)..."
+pv $INSTALLER | bash -s -- -b -p $INSTALL_DIR
 check_status "Anaconda installation"
 
 echo "Configuring conda environment..."
