@@ -37,7 +37,7 @@ leofs:
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
   persistence:
-    storageClass: standard
+    storageClass: nfs-client
 
 dataextraction:
   image:
