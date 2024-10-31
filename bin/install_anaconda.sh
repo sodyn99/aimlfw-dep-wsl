@@ -7,20 +7,18 @@ check_status() {
     fi
 }
 
-sudo apt update && sudo apt install -y pv
-
 ANACONDA_URL="https://repo.anaconda.com/archive/Anaconda3-2024.06-1-Linux-x86_64.sh"
 INSTALLER="Anaconda3-2024.06-1-Linux-x86_64.sh"
 INSTALL_DIR="$HOME/anaconda3"
 
 echo "Starting Anaconda installation..."
-wget $ANACONDA_URL -O $INSTALLER
+wget -q $ANACONDA_URL -O $INSTALLER
 check_status "Downloading Anaconda"
 
 chmod +x $INSTALLER
 
 echo "Installing Anaconda to $INSTALL_DIR (this may take a few minutes)..."
-pv $INSTALLER | bash -s -- -b -p $INSTALL_DIR
+./$INSTALLER -b -p $INSTALL_DIR
 check_status "Anaconda installation"
 
 echo "Configuring conda environment..."
@@ -33,9 +31,7 @@ rm $INSTALLER
 echo "Installing additional packages and configuring PATH..."
 conda install -y argcomplete
 echo 'export PATH=~/anaconda3/bin:~/anaconda3/condabin:$PATH' >> ~/.bashrc
-echo "eval \"$(register-python-argcomplete conda)\"" >> ~/.bashrc
+echo "$(register-python-argcomplete conda)" >> ~/.bashrc
 source ~/.bashrc
 conda config --set auto_activate_base false
 check_status "Anaconda configuration"
-
-echo "Anaconda setup completed successfully!"
