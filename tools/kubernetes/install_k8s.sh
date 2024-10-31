@@ -54,7 +54,7 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/con
 sudo systemctl restart containerd
 check_status "Configuring and restarting containerd"
 
-echo "Step 4: Downloading and installing minikube..."
+echo "Step 4: Installing Kubernetes packages..."
 
 sudo apt update && sudo apt install -y conntrack containernetworking-plugins apt-transport-https ca-certificates curl
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -63,32 +63,24 @@ sudo apt update && sudo apt install -y kubeadm=1.28.0-1.1 kubelet=1.28.0-1.1 kub
 sudo apt-mark hold kubelet kubeadm kubectl
 echo 'source <(kubectl completion bash)' >> ~/.bashrc
 
-check_status "Installing kubeadm, kubelet, and kubectl"
+check_status "Installing Kubernetes packages"
 
-VERSION="v1.28.0"
-curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
-sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
-rm crictl-$VERSION-linux-amd64.tar.gz
-check_status "Installing crictl"
+echo "Step 5: Initializing Kubernetes..."
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube
-rm minikube-linux-amd64
-echo 'source <(minikube completion bash)' >> ~/.bashrc
-check_status "Installing minikube"
+echo "Removing taints from control-plane nodes..."
+for node in $(kubectl get nodes --no-headers | awk '{print $1}')
+do
+  echo "Removing taint from $node..."
+  kubectl taint nodes $node node-role.kubernetes.io/control-plane- --ignore-not-found=true
+done
 
-echo "Step 5: Starting minikube..."
-minikube start --driver=none --container-runtime=containerd --kubernetes-version=v1.28.0 \
-    --apiserver-ips 127.0.0.1 --apiserver-name localhost \
-    --addons=nvidia-device-plugin \
-    --cni=flannel
-# minikube start --driver=docker --container-runtime=containerd --kubernetes-version=v1.28.0 \
-#     --apiserver-ips 127.0.0.1 --apiserver-name localhost \
-#     --addons=nvidia-device-plugin \
-#     --cni=flannel
-check_status "Starting minikube"
-
-echo "Kubernetes cluster started with minikube using containerd!"
+echo "Downloading and applying Flannel..."
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+check_status "Applying Flannel"
 
 # install nerdctl
 NERDCTL_VERSION=1.7.6 # see https://github.com/containerd/nerdctl/releases for the latest release
@@ -107,6 +99,11 @@ echo "Installation completed for nerdctl!"
 # install buildkit
 BUILDKIT_VERSION=0.13.2 # see https://github.com/moby/buildkit/releases for the latest release
 
+archType="amd64"
+if test "$(uname -m)" = "aarch64"
+then
+            archType="arm64"
+fi
 wget -q "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-${archType}.tar.gz" -O /tmp/buildkit.tar.gz
 tar Cxzvvf /tmp /tmp/buildkit.tar.gz
 sudo mv /tmp/bin/buildctl /usr/bin/
